@@ -1,18 +1,22 @@
 import { CookieProtocol } from "../../domain/cookie-config-protocol/cookie-protocol";
 
 class CookieManagement {
-    private cookiesFromDom = document.cookie;
+    private cookiesFromDom = '';
     private cookiesObj: { [key: string]: string } = {};
-    private deleteDate: string = new Date(0).toUTCString(); 
+    private readonly deleteDate: string = new Date(0).toUTCString(); 
 
     private parseCookies(): void {
-        if(this.cookiesFromDom === '') return;
+        this.cookiesFromDom = document.cookie;
 
-        console.log(this.cookiesFromDom)
+        if(this.cookiesFromDom === '') {
+            this.cookiesObj = {};
+            return;
+        }
+
         const arrayOfCookies = this.cookiesFromDom.split('; ');
 
         for(const cookie of arrayOfCookies) {
-            const [key, value] = cookie.split('=');  
+            const [key, value] = cookie.split('='); 
             this.cookiesObj[key] = value; 
         }
     }
@@ -26,21 +30,21 @@ class CookieManagement {
         document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}${domain}${path}${secure}${expires}`;
     }
 
-    get(name: string = ''): string {
+    get(name: string): string {
         this.parseCookies();
         return this.cookiesObj[name] || "";
     }
 
-    getAll(): { [key: string]: string } {
+    getAll(): { [key: string]: string } | string {
         this.parseCookies();
-        return this.cookiesObj;
+        return this.cookiesObj || "";
     }
 
     update(name: string, value: string, config: CookieProtocol = {}): void {
         this.set(name, value, config);
     }
 
-    delete(name: string = ''): void {
+    delete(name: string): void {
         document.cookie = `${encodeURIComponent(name)}=;expires=${this.deleteDate}`;
     }
 
