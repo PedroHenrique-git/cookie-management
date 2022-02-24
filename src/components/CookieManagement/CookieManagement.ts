@@ -1,9 +1,9 @@
 import Cookie from '../../classes/CookieManagement/CookieManagement';
 import createFragment from '../../utils/create-fragment';
+import Component from '../Component/Component';
 import './styles.css';
 
-export default class CookieManagement {
-  private app: HTMLElement;
+class CookieManagement extends Component {
   private nameOfCookie: HTMLInputElement;
   private valueOfCookie: HTMLInputElement;
   private expireOption: HTMLInputElement;
@@ -17,11 +17,7 @@ export default class CookieManagement {
   private deleteAllCookieBtn: HTMLButtonElement;
   private resultSection: HTMLElement;
 
-  constructor(app: HTMLElement) {
-    this.app = app;
-  }
-
-  private createStructure() {
+  protected createStructure() {
     return String.raw`
         <div class="container">
             <section class="group">
@@ -66,7 +62,7 @@ export default class CookieManagement {
     `;
   }
 
-  selectors() {
+  protected selectors() {
     this.nameOfCookie = document.querySelector('#cookie-name') as HTMLInputElement;
     this.valueOfCookie = document.querySelector('#cookie-value') as HTMLInputElement;
     this.expireOption = document.querySelector('#cookie-expires') as HTMLInputElement;
@@ -81,7 +77,7 @@ export default class CookieManagement {
     this.resultSection = document.querySelector('.results') as HTMLElement;
   }
 
-  events() {
+  protected events() {
     this.createCookieBtn.addEventListener('click', this.createCookieFn.bind(this));
     this.deleteCookieBtn.addEventListener('click', this.deleteCookieFn.bind(this));
     this.deleteAllCookieBtn.addEventListener('click', this.deleteAllCookieFn.bind(this));
@@ -89,7 +85,7 @@ export default class CookieManagement {
     this.getCookieBtn.addEventListener('click', this.getCookieFn.bind(this));
   }
 
-  createCookieFn() {
+  private createCookieFn() {
     const name = this.nameOfCookie.value;
     const value = this.valueOfCookie.value;
     const date = new Date(this.expireOption.value).toUTCString();
@@ -102,24 +98,23 @@ export default class CookieManagement {
     });
   }
 
-  getCookieFn() {
+  private getCookieFn() {
     const name = this.nameOfCookie.value;
     const cookie = Cookie.get(name);
-    console.log(cookie);
     this.resultSection.textContent = JSON.stringify(cookie);
   }
 
-  getAllCookiesFn() {
+  private getAllCookiesFn() {
     const cookies = Cookie.getAll();
     this.resultSection.textContent = JSON.stringify(cookies);
   }
 
-  deleteCookieFn() {
+  private deleteCookieFn() {
     const name = this.nameOfCookie.value;
     Cookie.delete(name);
   }
 
-  deleteAllCookieFn() {
+  private deleteAllCookieFn() {
     Cookie.deleteAll();
   }
 
@@ -129,3 +124,5 @@ export default class CookieManagement {
     this.events();
   }
 }
+
+export default new CookieManagement().render();

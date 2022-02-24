@@ -30,9 +30,10 @@ class CookieManagement {
     document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}${domain}${path}${secure}${expires}`;
   }
 
-  get(name: string): string {
+  get(name: string): Record<string, string> {
     this.parseCookies();
-    return this.cookiesObj[name] || '';
+    const exists = this.cookiesObj[name];
+    return exists ? { [name]: this.cookiesObj[name] } : {};
   }
 
   getAll(): Record<string, string> | string {
