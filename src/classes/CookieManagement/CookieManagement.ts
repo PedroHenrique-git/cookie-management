@@ -1,60 +1,63 @@
-import { CookieProtocol } from "../../domain/cookie-config-protocol/cookie-protocol";
+import { CookieProtocol } from '../../domain/cookie-config-protocol/cookie-protocol';
 
 class CookieManagement {
-    private cookiesFromDom = '';
-    private cookiesObj: { [key: string]: string } = {};
-    private readonly deleteDate: string = new Date(0).toUTCString(); 
+  private cookiesFromDom = '';
+  private cookiesObj: Record<string, string> = {};
+  private readonly deleteDate: string = new Date(0).toUTCString();
 
-    private parseCookies(): void {
-        this.cookiesFromDom = document.cookie;
+  private parseCookies(): void {
+    this.cookiesFromDom = document.cookie;
 
-        if(this.cookiesFromDom === '') {
-            this.cookiesObj = {};
-            return;
-        }
-
-        const arrayOfCookies = this.cookiesFromDom.split('; ');
-
-        for(const cookie of arrayOfCookies) {
-            const [key, value] = cookie.split('='); 
-            this.cookiesObj[key] = value; 
-        }
+    if (this.cookiesFromDom === '') {
+      this.cookiesObj = {};
+      return;
     }
 
-    set(name: string, value: string, config: CookieProtocol = {}): void {
-        const domain = config.domain ? `;domain=${config.domain}` : '';
-        const path = config.path ? `;path=${config.path}` : ''; 
-        const secure = config.secure ? `;secure=${config.secure}` : '';
-        const expires = config.expires ? `;expires=${config.expires}` : '';
+    const arrayOfCookies = this.cookiesFromDom.split('; ');
 
-        document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}${domain}${path}${secure}${expires}`;
+    for (const cookie of arrayOfCookies) {
+      const [key, value] = cookie.split('=');
+      this.cookiesObj[key] = value;
     }
+  }
 
-    get(name: string): string {
-        this.parseCookies();
-        return this.cookiesObj[name] || "";
-    }
+  set(name: string, value: string, config: CookieProtocol = {}): void {
+    const domain = config.domain ? `;domain=${config.domain}` : '';
+    const path = config.path ? `;path=${config.path}` : '';
+    const secure = config.secure ? `;secure=${config.secure}` : '';
+    const expires = config.expires ? `;expires=${config.expires}` : '';
 
-    getAll(): { [key: string]: string } | string {
-        this.parseCookies();
-        return this.cookiesObj || "";
-    }
+    document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}${domain}${path}${secure}${expires}`;
+  }
 
-    update(name: string, value: string, config: CookieProtocol = {}): void {
-        this.set(name, value, config);
-    }
+  get(name: string): string {
+    this.parseCookies();
+    return this.cookiesObj[name] || '';
+  }
 
-    delete(name: string): void {
-        document.cookie = `${encodeURIComponent(name)}=;expires=${this.deleteDate}`;
-    }
+  getAll(): Record<string, string> | string {
+    this.parseCookies();
+    return this.cookiesObj || '';
+  }
 
-    deleteAll(): void {
-        this.parseCookies();
-        const cookiesNames = Object.keys(this.cookiesObj); 
-        for(const cookieName of cookiesNames) {
-            document.cookie = `${encodeURIComponent(cookieName)}=;expires=${this.deleteDate}`;    
-        }    
+  update(name: string, value: string, config: CookieProtocol = {}): void {
+    this.set(name, value, config);
+  }
+
+  delete(name: string): void {
+    if (!this.cookiesObj[name]) return;
+    document.cookie = `${encodeURIComponent(name)}=;expires=${this.deleteDate}`;
+    delete this.cookiesObj[name];
+  }
+
+  deleteAll(): void {
+    this.parseCookies();
+    const cookiesNames = Object.keys(this.cookiesObj);
+    for (const cookieName of cookiesNames) {
+      document.cookie = `${encodeURIComponent(cookieName)}=;expires=${this.deleteDate}`;
+      delete this.cookiesObj[cookieName];
     }
+  }
 }
 
 export default new CookieManagement();

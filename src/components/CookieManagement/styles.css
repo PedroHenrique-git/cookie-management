@@ -1,0 +1,72 @@
+:root {
+  --primary-font-color: #000;
+  --primary-border-color: #cecece;
+}
+
+.container {
+  max-width: 640px;
+  margin: 100px auto;
+  padding: 0 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.container .group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+.container .group:not(.group:last-of-type) {
+  padding-bottom: 30px;
+}
+
+.container .group:last-of-type {
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.container .group .input-group {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+.container .group .input-group input {
+  border: 1px solid var(--primary-border-color);
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  color: var(--primary-font-color);
+  outline: none;
+  font-size: 1.7rem;
+}
+
+.container .group .input-group .input-group__name {
+  padding: 8px 0;
+  font-size: 1.4rem;
+}
+
+.container .group h3 {
+  color: var(--primary-font-color);
+  text-align: center;
+  padding-bottom: 25px;
+  font-size: 1.8rem;
+  width: 100%;
+}
+
+.results {
+  margin: 50px 0;
+  padding: 10px;
+  font-size: 1.8rem;
+}
