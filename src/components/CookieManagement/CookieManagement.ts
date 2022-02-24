@@ -125,4 +125,4 @@ class CookieManagement extends Component {
   }
 }
 
-export default new CookieManagement().render();
+export default new CookieManagement();
